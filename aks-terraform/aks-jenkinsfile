@@ -1,6 +1,13 @@
 pipeline {
     agent any
 
+    environment {
+      ARM_CLIENT_ID="bc4df575-ddea-4750-bbbb-63b857353d58"
+      ARM_CLIENT_SECRET="Wt28Q~qBEe_MMrpOSHfSt_C3gbJ1sHfGEQztuc2p"
+      ARM_SUBSCRIPTION_ID="a31069ae-365f-467f-9f5a-6bf3cb86957e" 
+      ARM_TENANT_ID="9fdb0924-bc9c-480d-a5fe-7f537262abc7"
+    }
+
     parameters {
         choice(
             name: 'ACTION',
