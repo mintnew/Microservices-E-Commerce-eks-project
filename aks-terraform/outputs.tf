@@ -8,10 +8,6 @@ output "aks_cluster_name" {
   value       = azurerm_kubernetes_cluster.main.name
 }
 
-output "resource_group_name" {
-  description = "Resource group name"
-  value       = azurerm_resource_group.main.name
-}
 
 output "get_credentials_command" {
   description = "Command to get AKS credentials"
