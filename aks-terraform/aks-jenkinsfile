@@ -2,10 +2,11 @@ pipeline {
     agent any
 
     environment {
-      ARM_CLIENT_ID="bc4df575-ddea-4750-bbbb-63b857353d58"
-      ARM_CLIENT_SECRET="Wt28Q~qBEe_MMrpOSHfSt_C3gbJ1sHfGEQztuc2p"
-      ARM_SUBSCRIPTION_ID="a31069ae-365f-467f-9f5a-6bf3cb86957e" 
-      ARM_TENANT_ID="9fdb0924-bc9c-480d-a5fe-7f537262abc7"
+        // Use Jenkins credentials IDs for SP secrets
+        ARM_CLIENT_ID       = credentials('jenkins-arm-client-id')
+        ARM_CLIENT_SECRET   = credentials('jenkins-arm-client-secret')
+        ARM_SUBSCRIPTION_ID = credentials('jenkins-arm-subscription-id')
+        ARM_TENANT_ID       = credentials('jenkins-arm-tenant-id')
     }
 
     parameters {
@@ -17,19 +18,20 @@ pipeline {
     }
 
     stages {
-        stage('Checkout from Git') {
+        stage('Checkout') {
             steps {
-                echo 'Checking out Git repository...'
+                checkout scm
+                echo '✅ Checked out Git repository'
             }
         }
 
-        stage('Terraform version') {
+        stage('Terraform Version') {
             steps {
                 sh 'terraform --version'
             }
         }
 
-        stage('Terraform init') {
+        stage('Terraform Init') {
             steps {
                 dir('aks-terraform') {
                     sh 'terraform init --reconfigure'
@@ -37,34 +39,34 @@ pipeline {
             }
         }
 
-        stage('Terraform validate') {
+        stage('Terraform Validate') {
             steps {
                 dir('aks-terraform') {
-                    sh 'terraform validate'
+                    sh 'terraform validate -no-color'
                 }
             }
         }
 
-        stage('Terraform plan') {
+        stage('Terraform Plan') {
             steps {
                 dir('aks-terraform') {
-                    sh 'terraform plan'
+                    sh 'terraform plan -out=tfplan'
                 }
             }
         }
 
-        stage('Terraform apply') {
+        stage('Terraform Apply') {
             when {
                 expression { params.ACTION == 'apply' }
             }
             steps {
                 dir('aks-terraform') {
-                    sh 'terraform apply -auto-approve'
+                    sh 'terraform apply -auto-approve tfplan'
                 }
             }
         }
 
-        stage('Terraform destroy') {
+        stage('Terraform Destroy') {
             when {
                 expression { params.ACTION == 'destroy' }
             }
@@ -73,6 +75,15 @@ pipeline {
                     sh 'terraform destroy -auto-approve'
                 }
             }
+        }
+    }
+
+    post {
+        always {
+            echo 'Pipeline finished ✅'
+        }
+        failure {
+            echo 'Pipeline failed ❌'
         }
     }
 }
