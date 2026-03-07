@@ -1,8 +1,3 @@
-output "region" {
-    description = "Jumphost Server region"
-    value = var.region
-}
-output "jumphost_public_ip" {
-  description = "Public IP address of the EC2 jumphost"
-  value       = aws_instance.ec2.public_ip
+output "vm_public_ip" {
+  value = azurerm_public_ip.vm_ip.ip_address
 }

@@ -1,19 +1,25 @@
 terraform {
+  required_version = ">=1.6"
+
   required_providers {
-    aws = {
-      source  = "hashicorp/aws"
-      version = ">= 5.25.0"
+    azurerm = {
+      source  = "hashicorp/azurerm"
+      version = "~>3.100"
     }
   }
 
-  backend "s3" {
-    bucket = "arumullaaluruu1"
-    key    = "ec2/terraform.tfstate"
-    region = "us-east-1"
+  backend "azurerm" {
+    resource_group_name  = "tfstate-rg"
+    storage_account_name = "arumullaaluruu1"
+    container_name       = "container2"
+    key                  = "vm/terraform.tfstate"
   }
+}
 
-  required_version = ">= 1.6.3"
+provider "azurerm" {
+  features {
+
+  }
 }
-provider "aws" {
-  region = "us-east-1"
-}
+
+
