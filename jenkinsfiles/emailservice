@@ -31,7 +31,7 @@ pipeline {
                 ACR_NAME = "acremailservice"               // Replace with your ACR name
                 ACR_LOGIN_SERVER = "acremailservice.azurecr.io"
                 AZURE_CLIENT_ID = "bc4df575-ddea-4750-bbbb-63b857353d58"
-                AZURE_CLIENT_SECRET = "b3be6fe8-7a95-4108-b8b5-0d1ca12eaf83"
+                AZURE_CLIENT_SECRET = "Wt28Q~qBEe_MMrpOSHfSt_C3gbJ1sHfGEQztuc2p"
                 AZURE_TENANT_ID = "9fdb0924-bc9c-480d-a5fe-7f537262abc7"
 
                 
