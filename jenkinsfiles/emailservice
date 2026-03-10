@@ -64,28 +64,25 @@ pipeline {
         REPO_URL = "acremailservice.azurecr.io/emailservice"  // ACR repository URL
         YAML_FILE = "emailservice.yaml"
     }
-            steps {
-              dir('kubernetes-files') {
-            // Use Jenkins credentials properly
-                 withCredentials([string(credentialsId: 'my-git-pattoken', variable: 'GIT_TOKEN')]) {
-                script {
-                    // Use double quotes for Groovy string interpolation
-                    sh """
-                        # Configure git user
-                        git config user.email "${GIT_EMAIL}"
-                        git config user.name "${GIT_USER_NAME}"
+    steps {
+        dir('kubernetes-files') {
+            withCredentials([string(credentialsId: 'my-git-pattoken', variable: 'GIT_TOKEN')]) {
+                sh '''
+                    # Configure Git
+                    git config user.email "$GIT_EMAIL"
+                    git config user.name "$GIT_USER_NAME"
 
-                        # Update image in YAML
-                        sed -i "s#image:.*#image: ${REPO_URL}:${BUILD_NUMBER}#g" ${YAML_FILE}
+                    # Update image in YAML
+                    sed -i "s#image:.*#image: ${REPO_URL}:${BUILD_NUMBER}#g" "$YAML_FILE"
 
-                        # Commit changes
-                        git add ${YAML_FILE}
-                        git commit -m "Update ${IMAGE_NAME} Image to version ${BUILD_NUMBER}" || echo "No changes to commit"
+                    # Add & commit changes
+                    git add "$YAML_FILE"
+                    git commit -m "Update ${IMAGE_NAME} Image to version $BUILD_NUMBER" || echo "No changes to commit"
 
-                        # Push using injected GitHub token
-                        git push https://${GIT_TOKEN}@github.com/${GIT_USER_NAME}/${GIT_REPO_NAME}.git HEAD:master
-                    """
-                }
+                    # Push to GitHub securely using the environment variable
+                    # Note: do not use Groovy interpolation for the token
+                    git push https://$GIT_TOKEN@github.com/$GIT_USER_NAME/$GIT_REPO_NAME.git HEAD:master
+                '''
             }
         }
     }
