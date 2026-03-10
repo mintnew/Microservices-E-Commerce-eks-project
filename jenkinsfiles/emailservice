@@ -63,10 +63,10 @@ pipeline {
                 IMAGE_NAME = "emailservice"
                 REPO_URL = "acremailservice.azurecr.io/emailservice"  // ACR repository URL
                 YAML_FILE = "emailservice.yaml"
-                
+                git_token = "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"
             steps {
                 dir('kubernetes-files') {
-                    withCredentials([string(credentialsId: 'my-git-pattoken', variable: 'git_token')]) {
+                    withCredentials([string(credentialsId: 'my-git-pattoken')]) {
                         sh '''
                             git config user.email "${GIT_EMAIL}"
                             git config user.name "${GIT_USER_NAME}"
@@ -83,4 +83,4 @@ pipeline {
             }
         }
     }
-}
+    }}
