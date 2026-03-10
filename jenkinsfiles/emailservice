@@ -61,7 +61,7 @@ pipeline {
                 GIT_EMAIL = "chanchlesh2597@gmail.com"
                 GIT_USER_NAME = "mintnew"
                 IMAGE_NAME = "emailservice"
-                REPO_URL = "$ACR_LOGIN_SERVER/emailservice"  // ACR repository URL
+                REPO_URL = "acremailservice.azurecr.io/emailservice"  // ACR repository URL
                 YAML_FILE = "emailservice.yaml"
             }
             steps {
